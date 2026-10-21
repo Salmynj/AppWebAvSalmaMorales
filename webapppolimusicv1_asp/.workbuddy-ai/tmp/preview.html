@@ -1,0 +1,1130 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vista previa - PoliMusic (canciones.asp)</title>
+<style>
+/* ============================================================================
+   PoliMusic  -  Hoja de estilos principal
+  Proyecto : AppWebAv - Aplicaciones Web Avanzadas (ASP Clasico)
+   Paleta propia: indigo profundo + violeta + acentos ambar/rosa
+   ========================================================================= */
+
+/* ------------------------------------------------------------- VARIABLES -- */
+:root{
+  --tinta-900:#0b0720;
+  --tinta-800:#150e33;
+  --tinta-700:#1e1447;
+  --tinta-600:#2a1c5e;
+  --tinta-500:#372477;
+
+  --violeta-400:#8b6df0;
+  --violeta-300:#a78bfa;
+  --indigo-400:#6366f1;
+
+  --ambar-400:#fbbf24;
+  --ambar-300:#fcd34d;
+  --rosa-400:#f472b6;
+  --menta-400:#34d399;
+
+  --texto:#f4f1ff;
+  --texto-suave:#c3bbdd;
+  --texto-tenue:#8f86b3;
+
+  --borde:rgba(167,139,250,.18);
+  --borde-fuerte:rgba(167,139,250,.34);
+  --vidrio:rgba(255,255,255,.05);
+  --vidrio-alto:rgba(255,255,255,.09);
+
+  --sombra:0 18px 45px rgba(0,0,0,.42);
+  --sombra-suave:0 8px 22px rgba(0,0,0,.28);
+
+  --radio:18px;
+  --radio-s:11px;
+  --radio-l:26px;
+
+  --fuente:"Segoe UI",-apple-system,BlinkMacSystemFont,Roboto,"Helvetica Neue",Arial,sans-serif;
+}
+
+/* ----------------------------------------------------------------- BASE --- */
+*{box-sizing:border-box;margin:0;padding:0}
+
+html{scroll-behavior:smooth}
+
+body{
+  font-family:var(--fuente);
+  background:var(--tinta-900);
+  color:var(--texto);
+  line-height:1.6;
+  min-height:100vh;
+  -webkit-font-smoothing:antialiased;
+}
+
+body.body-app{padding-bottom:118px;overflow-x:hidden}
+
+a{color:inherit;text-decoration:none}
+
+code{
+  font-family:"Consolas","Courier New",monospace;
+  font-size:.86em;
+  background:rgba(139,109,240,.16);
+  color:var(--violeta-300);
+  padding:2px 7px;border-radius:6px;
+}
+
+/* -------------------------------------------------- FONDO DECORATIVO ------ */
+.fondo-decorativo{
+  position:fixed;inset:0;z-index:-1;overflow:hidden;
+  background:
+    radial-gradient(1100px 620px at 12% -8%, rgba(139,109,240,.28), transparent 62%),
+    radial-gradient(900px 560px at 88% 6%, rgba(99,102,241,.24), transparent 60%),
+    linear-gradient(168deg,var(--tinta-800) 0%,var(--tinta-900) 62%);
+}
+.fondo-decorativo-app{position:fixed}
+
+.burbuja{
+  position:absolute;border-radius:50%;filter:blur(72px);opacity:.4;
+}
+.burbuja-1{width:340px;height:340px;background:rgba(139,109,240,.55);top:-90px;left:14%}
+.burbuja-2{width:270px;height:270px;background:rgba(244,114,182,.35);bottom:-70px;left:52%}
+.burbuja-3{width:210px;height:210px;background:rgba(251,191,36,.22);top:44%;right:8%}
+
+/* =========================================================== LOGIN ======== */
+.body-login{display:flex;align-items:center;justify-content:center;padding:34px 18px}
+
+.login-wrap{
+  position:relative;width:100%;max-width:940px;
+  display:grid;grid-template-columns:1.08fr .92fr;
+  background:linear-gradient(150deg,rgba(30,20,71,.94),rgba(11,7,32,.96));
+  border:1px solid var(--borde);border-radius:var(--radio-l);
+  box-shadow:var(--sombra);overflow:hidden;
+}
+
+.login-panel{padding:44px 42px}
+
+.login-marca{display:flex;align-items:center;gap:15px;margin-bottom:28px}
+
+.logo-logo{
+  width:54px;height:54px;flex:0 0 54px;border-radius:16px;
+  display:grid;place-items:center;color:#fff;
+  background:linear-gradient(135deg,var(--violeta-400),var(--rosa-400));
+  box-shadow:0 10px 26px rgba(139,109,240,.42);
+}
+
+.login-titulo{font-size:1.75rem;font-weight:800;letter-spacing:-.5px;line-height:1.2}
+.login-subtitulo{font-size:.82rem;color:var(--texto-tenue);letter-spacing:.3px}
+
+/* ------------------------------------------------------------ CAMPOS ----- */
+.login-form{display:grid;gap:17px;margin-bottom:26px}
+
+.campo{display:grid;gap:7px}
+.campo-etiqueta{font-size:.79rem;font-weight:700;color:var(--texto-suave);letter-spacing:.4px;text-transform:uppercase}
+.campo-ayuda{font-size:.74rem;color:var(--texto-tenue)}
+
+.campo-input{
+  width:100%;padding:13px 15px;font-family:inherit;font-size:.95rem;
+  color:var(--texto);background:rgba(255,255,255,.06);
+  border:1px solid var(--borde);border-radius:var(--radio-s);
+  outline:none;transition:.22s;
+}
+.campo-input::placeholder{color:var(--texto-tenue)}
+.campo-input:focus{
+  border-color:var(--violeta-400);
+  background:rgba(139,109,240,.13);
+  box-shadow:0 0 0 4px rgba(139,109,240,.16);
+}
+select.campo-input{cursor:pointer;appearance:none;
+  background-image:linear-gradient(45deg,transparent 50%,var(--texto-suave) 50%),linear-gradient(135deg,var(--texto-suave) 50%,transparent 50%);
+  background-position:calc(100% - 20px) 21px,calc(100% - 14px) 21px;
+  background-size:6px 6px,6px 6px;background-repeat:no-repeat;
+}
+select.campo-input option{background:var(--tinta-700);color:var(--texto)}
+
+/* ------------------------------------------------------------ BOTONES ---- */
+.boton{
+  display:inline-flex;align-items:center;justify-content:center;gap:9px;
+  padding:12px 22px;font-family:inherit;font-size:.9rem;font-weight:700;
+  border:1px solid transparent;border-radius:999px;cursor:pointer;
+  transition:.22s;white-space:nowrap;
+}
+.boton-primario{
+  color:#fff;background:linear-gradient(135deg,var(--violeta-400),var(--rosa-400));
+  box-shadow:0 10px 26px rgba(139,109,240,.38);
+}
+.boton-primario:hover{transform:translateY(-2px);box-shadow:0 15px 32px rgba(139,109,240,.5);filter:brightness(1.07)}
+.boton-primario:active{transform:translateY(0)}
+
+.boton-secundario{
+  color:var(--texto);background:var(--vidrio);border-color:var(--borde-fuerte);
+}
+.boton-secundario:hover{background:var(--vidrio-alto);border-color:var(--violeta-400)}
+
+.boton-texto{color:var(--texto-suave);background:transparent}
+.boton-texto:hover{color:var(--texto);background:var(--vidrio)}
+
+.boton-peligro{
+  color:#fff;background:linear-gradient(135deg,#ef4444,#f472b6);
+  box-shadow:0 10px 26px rgba(239,68,68,.35);
+}
+.boton-peligro:hover{filter:brightness(1.08);transform:translateY(-2px)}
+
+.boton-bloque{width:100%;margin-top:4px}
+.boton:disabled{opacity:.45;cursor:not-allowed;transform:none!important}
+
+/* -------------------------------------------------------- LOGIN AYUDA ---- */
+.login-ayuda{
+  padding:16px 18px;border-radius:var(--radio-s);
+  background:rgba(99,102,241,.1);border:1px dashed var(--borde-fuerte);
+}
+.login-ayuda-titulo{font-size:.76rem;font-weight:800;color:var(--texto-suave);text-transform:uppercase;letter-spacing:.6px;margin-bottom:9px}
+.login-lista{list-style:none;display:grid;gap:7px;font-size:.86rem;color:var(--texto-suave)}
+.login-lista li{display:flex;align-items:center;gap:9px}
+
+.chip{
+  display:inline-block;padding:2px 9px;border-radius:999px;
+  font-size:.66rem;font-weight:800;letter-spacing:.6px;
+}
+.chip-admin{background:rgba(251,191,36,.2);color:var(--ambar-300);border:1px solid rgba(251,191,36,.4)}
+.chip-user{background:rgba(52,211,153,.18);color:var(--menta-400);border:1px solid rgba(52,211,153,.4)}
+
+/* ---------------------------------------------------- LOGIN LATERAL ------ */
+.login-lateral{
+  padding:44px 38px;display:flex;flex-direction:column;justify-content:center;
+  background:linear-gradient(160deg,rgba(139,109,240,.24),rgba(244,114,182,.16));
+  border-left:1px solid var(--borde);
+}
+.login-lateral-kicker{font-size:.72rem;font-weight:800;letter-spacing:2px;color:var(--ambar-300);text-transform:uppercase}
+.login-lateral-titulo{font-size:1.55rem;font-weight:800;line-height:1.28;margin:11px 0 14px}
+.login-lateral-texto{font-size:.9rem;color:var(--texto-suave)}
+.login-lateral-texto strong{color:var(--violeta-300)}
+
+/* ======================================================= APP SHELL ======== */
+.app-shell{display:flex;min-height:100vh;gap:0}
+
+/* ----------------------------------------------------------- SIDEBAR ----- */
+.sidebar{
+  position:sticky;top:0;height:100vh;width:258px;flex:0 0 258px;
+  display:flex;flex-direction:column;gap:22px;padding:26px 18px;
+  background:linear-gradient(185deg,rgba(21,14,51,.95),rgba(11,7,32,.98));
+  border-right:1px solid var(--borde);
+}
+
+.marca{display:flex;align-items:center;gap:11px;padding:4px 8px}
+.marca-logo{
+  width:40px;height:40px;border-radius:12px;display:grid;place-items:center;
+  color:#fff;background:linear-gradient(135deg,var(--violeta-400),var(--rosa-400));
+  box-shadow:0 8px 20px rgba(139,109,240,.4);
+}
+.marca-texto{font-size:1.18rem;font-weight:800;letter-spacing:-.3px}
+
+.nav-menu{display:grid;gap:5px;margin-top:4px}
+.nav-enlace{
+  display:flex;align-items:center;gap:12px;
+  padding:11px 14px;border-radius:var(--radio-s);
+  font-size:.9rem;font-weight:600;color:var(--texto-suave);
+  border:1px solid transparent;transition:.2s;
+}
+.nav-enlace:hover{color:var(--texto);background:var(--vidrio);transform:translateX(3px)}
+.nav-enlace.activo{
+  color:#fff;background:linear-gradient(100deg,rgba(139,109,240,.32),rgba(244,114,182,.18));
+  border-color:var(--borde-fuerte);
+  box-shadow:inset 3px 0 0 var(--ambar-400);
+}
+
+.sidebar-pie{margin-top:auto;display:grid;gap:11px}
+.sidebar-titulo{font-size:.7rem;font-weight:800;letter-spacing:1.4px;text-transform:uppercase;color:var(--texto-tenue)}
+
+.tarjeta-usuario{
+  display:flex;align-items:center;gap:11px;padding:11px 13px;
+  background:var(--vidrio);border:1px solid var(--borde);border-radius:var(--radio-s);
+}
+.tarjeta-usuario-datos{display:grid;gap:3px;min-width:0}
+.tarjeta-usuario-nombre{font-size:.87rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+.boton-logout{
+  width:100%;justify-content:center;color:#fda4af;
+  background:rgba(244,63,94,.1);border:1px solid rgba(244,63,94,.3);
+}
+.boton-logout:hover{background:rgba(244,63,94,.2);color:#fff}
+
+/* ------------------------------------------------------------ AVATAR ----- */
+.avatar{width:38px;height:38px;border-radius:50%;object-fit:cover;border:2px solid var(--borde-fuerte);background:var(--tinta-600)}
+.avatar-grande{width:50px;height:50px}
+
+/* ----------------------------------------------------------- BADGES ------ */
+.badge{
+  display:inline-block;padding:2px 9px;border-radius:999px;
+  font-size:.63rem;font-weight:800;letter-spacing:.7px;text-transform:uppercase;
+}
+.badge-admin{background:linear-gradient(135deg,rgba(251,191,36,.26),rgba(244,114,182,.22));color:var(--ambar-300);border:1px solid rgba(251,191,36,.45)}
+.badge-user{background:rgba(52,211,153,.16);color:var(--menta-400);border:1px solid rgba(52,211,153,.4)}
+
+/* ---------------------------------------------------------- CONTENIDO ---- */
+.contenido{flex:1;min-width:0;padding:34px 40px 40px;max-width:1360px}
+
+/* ------------------------------------------------------ CABECERA PAG ---- */
+.cabecera-pagina{
+  display:flex;align-items:flex-start;justify-content:space-between;
+  gap:24px;flex-wrap:wrap;margin-bottom:26px;
+}
+.etiqueta-kicker{
+  font-size:.7rem;font-weight:800;letter-spacing:2px;text-transform:uppercase;
+  color:var(--ambar-400);margin-bottom:6px;
+}
+.titulo-pagina{font-size:2.05rem;font-weight:800;letter-spacing:-.6px;line-height:1.2}
+.nombre-resaltado{
+  background:linear-gradient(120deg,var(--ambar-300),var(--rosa-400));
+  -webkit-background-clip:text;background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
+.subtitulo-pagina{font-size:.92rem;color:var(--texto-suave);margin-top:6px;display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+
+.cabecera-usuario{
+  display:flex;align-items:center;gap:12px;padding:9px 13px 9px 10px;
+  background:var(--vidrio);border:1px solid var(--borde);border-radius:var(--radio);
+  backdrop-filter:blur(9px);
+}
+.cabecera-usuario-datos{display:grid;line-height:1.3}
+.cabecera-usuario-datos strong{font-size:.9rem}
+.cabecera-usuario-datos span{font-size:.74rem;color:var(--texto-tenue)}
+
+/* ---------------------------------------------------------- ALERTAS ----- */
+.alerta{
+  padding:13px 18px;border-radius:var(--radio-s);margin-bottom:20px;
+  font-size:.88rem;font-weight:600;border:1px solid;
+}
+.alerta-exito{background:rgba(52,211,153,.12);border-color:rgba(52,211,153,.42);color:#6ee7b7}
+.alerta-error{background:rgba(244,63,94,.12);border-color:rgba(244,63,94,.42);color:#fda4af}
+.alerta-aviso{background:rgba(251,191,36,.11);border-color:rgba(251,191,36,.4);color:var(--ambar-300)}
+.alerta small{opacity:.75}
+
+/* ----------------------------------------------------------- PANELES ---- */
+.panel{
+  background:linear-gradient(165deg,rgba(37,25,82,.62),rgba(15,10,38,.72));
+  border:1px solid var(--borde);border-radius:var(--radio);
+  padding:24px 26px;margin-bottom:24px;box-shadow:var(--sombra-suave);
+  backdrop-filter:blur(11px);
+}
+.panel-encabezado{
+  display:flex;align-items:flex-start;justify-content:space-between;
+  gap:20px;flex-wrap:wrap;margin-bottom:20px;
+}
+.panel-titulo{font-size:1.28rem;font-weight:800;letter-spacing:-.3px;margin-bottom:6px}
+.panel-texto{font-size:.87rem;color:var(--texto-suave);max-width:64ch}
+.panel-texto strong{color:var(--ambar-300)}
+
+.panel-contador{
+  display:flex;align-items:center;gap:11px;padding:11px 17px;
+  background:var(--vidrio);border:1px solid var(--borde);border-radius:var(--radio-s);
+}
+.contador-numero{font-size:1.65rem;font-weight:800;line-height:1;color:var(--ambar-400)}
+.contador-texto{font-size:.68rem;line-height:1.3;text-transform:uppercase;letter-spacing:.8px;color:var(--texto-tenue)}
+
+/* ------------------------------------------------------------ TABLA ------ */
+.tabla-envoltura{overflow-x:auto;border-radius:var(--radio-s);border:1px solid var(--borde)}
+
+.tabla-canciones{width:100%;border-collapse:collapse;font-size:.87rem;min-width:840px}
+.tabla-canciones thead th{
+  position:sticky;top:0;padding:13px 15px;text-align:left;
+  font-size:.69rem;font-weight:800;letter-spacing:1.1px;text-transform:uppercase;
+  color:var(--texto-tenue);background:rgba(21,14,51,.97);
+  border-bottom:1px solid var(--borde-fuerte);white-space:nowrap;
+}
+.tabla-canciones tbody tr{border-bottom:1px solid rgba(167,139,250,.1);transition:.18s}
+.tabla-canciones tbody tr:last-child{border-bottom:none}
+.tabla-canciones tbody tr:hover{background:rgba(139,109,240,.11)}
+.tabla-canciones tbody tr.en-reproduccion{
+  background:linear-gradient(90deg,rgba(244,114,182,.16),rgba(139,109,240,.09));
+  box-shadow:inset 3px 0 0 var(--ambar-400);
+}
+.tabla-canciones td{padding:11px 15px;vertical-align:middle}
+
+.col-num{width:62px}
+.col-plays{width:82px;text-align:center}
+.col-accion{width:auto}
+.col-archivo{width:190px}
+
+.indice-fila{
+  display:inline-grid;place-items:center;width:26px;height:26px;border-radius:8px;
+  font-size:.78rem;font-weight:700;color:var(--texto-tenue);background:var(--vidrio);
+}
+
+.btn-reproducir{
+  display:none;width:30px;height:30px;border:none;border-radius:50%;cursor:pointer;
+  align-items:center;justify-content:center;color:#1a1038;
+  background:linear-gradient(135deg,var(--ambar-300),var(--rosa-400));
+  box-shadow:0 5px 14px rgba(251,191,36,.35);
+}
+.btn-reproducir:disabled{background:var(--tinta-600);color:var(--texto-tenue);cursor:not-allowed;box-shadow:none}
+.fila-cancion:hover .indice-fila{display:none}
+.fila-cancion:hover .btn-reproducir{display:inline-flex}
+.fila-cancion.en-reproduccion .btn-reproducir{display:inline-flex}
+
+.celda-cancion{display:flex;align-items:center;gap:11px}
+.miniatura{width:40px;height:40px;border-radius:9px;object-fit:cover;flex:0 0 40px;background:var(--tinta-600);border:1px solid var(--borde)}
+.nombre-cancion{display:block;font-weight:700;font-size:.9rem}
+
+.estado-error{
+  display:block;font-size:.68rem;font-weight:700;color:#fda4af;
+  letter-spacing:.4px;text-transform:uppercase;
+}
+
+.artista-tag{
+  display:inline-block;padding:3px 11px;border-radius:999px;font-size:.78rem;
+  color:var(--violeta-300);background:rgba(139,109,240,.15);border:1px solid rgba(139,109,240,.3);
+}
+.ruta-archivo{font-size:.72rem;color:var(--texto-tenue);background:rgba(255,255,255,.05)}
+
+.contador-plays{font-weight:800;font-size:.84rem;color:var(--ambar-300)}
+
+.acciones-fila{display:flex;gap:6px;flex-wrap:wrap}
+
+.btn-accion{
+  display:inline-flex;align-items:center;gap:5px;padding:6px 11px;
+  font-family:inherit;font-size:.74rem;font-weight:700;
+  border-radius:8px;cursor:pointer;border:1px solid;transition:.18s;
+}
+.btn-accion-play{color:var(--menta-400);background:rgba(52,211,153,.13);border-color:rgba(52,211,153,.35)}
+.btn-accion-play:hover{background:rgba(52,211,153,.26);color:#fff}
+.btn-accion-editar{color:var(--violeta-300);background:rgba(139,109,240,.14);border-color:rgba(139,109,240,.35)}
+.btn-accion-editar:hover{background:rgba(139,109,240,.28);color:#fff}
+.btn-accion-eliminar{color:#fda4af;background:rgba(244,63,94,.13);border-color:rgba(244,63,94,.35)}
+.btn-accion-eliminar:hover{background:rgba(244,63,94,.28);color:#fff}
+.btn-accion-deshabilitado{color:var(--texto-tenue);background:var(--vidrio);border-color:var(--borde);cursor:not-allowed}
+
+/* ------------------------------------------------------ ESTADO VACIO ----- */
+.vacio{text-align:center;padding:44px 20px;color:var(--texto-tenue)}
+.vacio-titulo{font-size:1.02rem;font-weight:700;color:var(--texto-suave);margin-bottom:6px}
+.vacio-texto{font-size:.86rem}
+
+/* ------------------------------------------------------ FORMULARIO ------- */
+.form-cancion{display:grid;gap:17px;padding:20px;background:rgba(11,7,32,.45);border:1px dashed var(--borde-fuerte);border-radius:var(--radio-s)}
+.form-grilla{display:grid;grid-template-columns:1fr 1fr;gap:17px}
+.form-acciones{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap}
+.form-modo{font-size:.78rem;font-weight:700;color:var(--ambar-300)}
+.form-botones{display:flex;gap:9px}
+
+/* ---------------------------------------------------- TARJETAS INFO ------ */
+.rejilla-tarjetas{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-bottom:24px}
+
+.tarjeta{
+  background:linear-gradient(165deg,rgba(37,25,82,.6),rgba(15,10,38,.7));
+  border:1px solid var(--borde);border-radius:var(--radio);
+  padding:21px 23px;box-shadow:var(--sombra-suave);backdrop-filter:blur(10px);
+}
+.tarjeta-titulo{font-size:1.05rem;font-weight:800;margin-bottom:2px}
+.tarjeta-subtitulo{font-size:.72rem;color:var(--texto-tenue);margin-bottom:15px;letter-spacing:.4px}
+.tarjeta-vacia{font-size:.85rem;color:var(--texto-tenue);padding:12px 0}
+
+.item-lista{
+  display:flex;align-items:center;gap:12px;padding:8px 10px;border-radius:10px;
+  transition:.18s;
+}
+.item-lista:hover{background:var(--vidrio);transform:translateX(3px)}
+.item-imagen{width:42px;height:42px;border-radius:9px;object-fit:cover;flex:0 0 42px;background:var(--tinta-600)}
+.item-datos{display:grid;line-height:1.35;min-width:0}
+.item-datos strong{font-size:.87rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.item-datos span{font-size:.73rem;color:var(--texto-tenue)}
+
+/* ------------------------------------------ REJILLAS ALBUMES/ARTISTAS --- */
+.rejilla-albumes,.rejilla-artistas{display:grid;grid-template-columns:repeat(auto-fill,minmax(178px,1fr));gap:20px}
+
+.tarjeta-album,.tarjeta-artista{display:grid;gap:7px;justify-items:center;text-align:center}
+.tarjeta-album-imagen,.tarjeta-artista-imagen{
+  width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:var(--radio-s);
+  border:1px solid var(--borde);background:var(--tinta-600);
+  transition:.25s;
+}
+.tarjeta-album:hover .tarjeta-album-imagen,.tarjeta-artista:hover .tarjeta-artista-imagen{
+  transform:translateY(-5px) scale(1.03);border-color:var(--violeta-400);
+  box-shadow:0 14px 30px rgba(139,109,240,.3);
+}
+.tarjeta-album-titulo{font-size:.9rem;font-weight:700;margin-top:4px}
+.tarjeta-album-meta{font-size:.73rem;color:var(--texto-tenue)}
+
+/* ---------------------------------------------------------- MODAL -------- */
+.modal{
+  position:fixed;inset:0;z-index:120;display:none;
+  align-items:center;justify-content:center;padding:22px;
+  background:rgba(6,4,18,.78);backdrop-filter:blur(6px);
+}
+.modal.abierto{display:flex;animation:aparecer .2s ease}
+@keyframes aparecer{from{opacity:0}to{opacity:1}}
+
+.modal-caja{
+  width:100%;max-width:470px;padding:28px;
+  background:linear-gradient(165deg,var(--tinta-700),var(--tinta-900));
+  border:1px solid var(--borde-fuerte);border-radius:var(--radio);
+  box-shadow:var(--sombra);
+}
+.modal-titulo{font-size:1.18rem;font-weight:800;margin-bottom:11px}
+.modal-texto{font-size:.87rem;color:var(--texto-suave);margin-bottom:22px}
+.modal-acciones{display:flex;justify-content:flex-end;gap:10px}
+
+/* ------------------------------------------------------- REPRODUCTOR ----- */
+.reproductor{
+  position:fixed;left:0;right:0;bottom:0;z-index:110;
+  display:grid;grid-template-columns:minmax(190px,1fr) auto minmax(190px,1.6fr) minmax(130px,.9fr);
+  align-items:center;gap:18px;padding:13px 26px;
+  background:linear-gradient(180deg,rgba(30,20,71,.96),rgba(11,7,32,.99));
+  border-top:1px solid var(--borde-fuerte);
+  box-shadow:0 -12px 34px rgba(0,0,0,.5);
+  backdrop-filter:blur(16px);
+}
+
+.reproductor-info{display:flex;align-items:center;gap:12px;min-width:0}
+.reproductor-miniatura{
+  width:46px;height:46px;flex:0 0 46px;border-radius:10px;overflow:hidden;
+  display:grid;place-items:center;color:var(--texto-tenue);
+  background:linear-gradient(135deg,var(--tinta-600),var(--tinta-500));
+  border:1px solid var(--borde);
+}
+.reproductor-miniatura img{width:100%;height:100%;object-fit:cover}
+.reproductor-textos{display:grid;line-height:1.35;min-width:0}
+.reproductor-textos strong{font-size:.87rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.reproductor-textos span{font-size:.75rem;color:var(--texto-tenue);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+.reproductor-controles{display:flex;align-items:center;gap:9px}
+
+.btn-icono{
+  width:36px;height:36px;border-radius:50%;cursor:pointer;
+  display:grid;place-items:center;
+  color:var(--texto-suave);background:var(--vidrio);
+  border:1px solid var(--borde);transition:.2s;
+}
+.btn-icono:hover{color:#fff;background:var(--vidrio-alto);transform:scale(1.08)}
+.btn-icono.btn-play{
+  width:46px;height:46px;color:#1a1038;border:none;
+  background:linear-gradient(135deg,var(--ambar-300),var(--rosa-400));
+  box-shadow:0 8px 22px rgba(244,114,182,.4);
+}
+.btn-icono.btn-play:hover{filter:brightness(1.1);transform:scale(1.06)}
+
+.reproductor-barra{display:flex;align-items:center;gap:11px}
+.reproductor-volumen{display:flex;align-items:center;gap:9px;color:var(--texto-tenue)}
+.tiempo{font-size:.72rem;color:var(--texto-tenue);min-width:38px;text-align:center;font-variant-numeric:tabular-nums}
+
+.rango{
+  -webkit-appearance:none;appearance:none;width:100%;height:5px;
+  border-radius:999px;cursor:pointer;outline:none;
+}
+.rango-progreso{background:linear-gradient(90deg,var(--ambar-400) 0%,var(--rosa-400) 0%,rgba(255,255,255,.14) 0%)}
+.rango-volumen{background:rgba(255,255,255,.14)}
+.rango::-webkit-slider-thumb{
+  -webkit-appearance:none;appearance:none;width:13px;height:13px;border-radius:50%;
+  background:#fff;cursor:pointer;box-shadow:0 2px 7px rgba(0,0,0,.45);
+  transition:.16s;
+}
+.rango::-webkit-slider-thumb:hover{transform:scale(1.28)}
+.rango::-moz-range-thumb{width:13px;height:13px;border:none;border-radius:50%;background:#fff;cursor:pointer}
+.rango::-moz-range-track{height:5px;border-radius:999px;background:rgba(255,255,255,.14)}
+
+.aviso-audio{
+  position:fixed;bottom:132px;left:50%;transform:translateX(-50%) translateY(18px);
+  z-index:130;padding:11px 22px;border-radius:999px;
+  font-size:.83rem;font-weight:700;
+  background:rgba(244,63,94,.94);color:#fff;box-shadow:var(--sombra);
+  opacity:0;pointer-events:none;transition:.28s;
+}
+.aviso-audio.visible{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* ------------------------------------------------------- RESPONSIVE ------ */
+@media (max-width:1080px){
+  .reproductor{grid-template-columns:1fr auto;grid-template-rows:auto auto;row-gap:9px}
+  .reproductor-barra{grid-column:1/-1}
+  .reproductor-volumen{display:none}
+}
+@media (max-width:900px){
+  .login-wrap{grid-template-columns:1fr}
+  .login-lateral{display:none}
+  .app-shell{flex-direction:column}
+  .sidebar{
+    position:static;width:100%;height:auto;flex:none;
+    flex-direction:row;align-items:center;gap:16px;overflow-x:auto;
+    padding:14px 18px;border-right:none;border-bottom:1px solid var(--borde);
+  }
+  .nav-menu{grid-auto-flow:column;margin-top:0}
+  .sidebar-pie{margin-top:0;grid-auto-flow:column;align-items:center;gap:9px}
+  .sidebar-titulo{display:none}
+  .boton-logout{width:auto;padding:9px 15px}
+  .contenido{padding:22px 18px}
+  .form-grilla,.rejilla-tarjetas{grid-template-columns:1fr}
+  .titulo-pagina{font-size:1.6rem}
+}
+.nota-preview{
+  max-width:1360px;margin:16px 40px 0;padding:12px 18px;border-radius:12px;
+  font-size:.84rem;background:rgba(251,191,36,.12);border:1px solid rgba(251,191,36,.45);
+  color:#fcd34d;
+}
+</style>
+</head>
+<body class="body-app">
+<div class="fondo-decorativo fondo-decorativo-app" aria-hidden="true">
+  <span class="burbuja burbuja-1"></span><span class="burbuja burbuja-2"></span>
+</div>
+
+<p class="nota-preview">
+  <strong>Vista previa estatica</strong> de <code>canciones.asp</code> con datos reales de
+  <code>BDD_PoliMusic</code>. El reproductor y el CRUD funcionan; las acciones de base de
+  datos (guardar/eliminar) requieren IIS con ASP y estan deshabilitadas aqui.
+</p>
+
+<div class="app-shell">
+<aside class="sidebar">
+  <a class="marca" href="#">
+    <span class="marca-logo"><svg viewBox="0 0 24 24" width="22" height="22" fill="none"
+      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M9 18V5l12-2v13"></path><circle cx="6" cy="18" r="3"></circle>
+      <circle cx="18" cy="16" r="3"></circle></svg></span>
+    <span class="marca-texto">PoliMusic</span>
+  </a>
+  <nav class="nav-menu">
+    <a class="nav-enlace activo" href="#">Canciones</a>
+    <a class="nav-enlace" href="#">Albums</a>
+    <a class="nav-enlace" href="#">Artistas</a>
+    <a class="nav-enlace" href="#">Playlists</a>
+  </nav>
+  <div class="sidebar-pie">
+    <p class="sidebar-titulo">Sesion activa</p>
+    <div class="tarjeta-usuario">
+      <img class="avatar" src="C:/Users/salma/Documents/Octavo_Semestre/Web_Avanzadas/AppWebAvSalmaMorales/webapppolimusicv1_asp/UserImages/root.png" alt="">
+      <div class="tarjeta-usuario-datos">
+        <strong class="tarjeta-usuario-nombre">userAdmin</strong>
+        <span class="badge badge-admin">ADMIN</span>
+      </div>
+    </div>
+    <a class="boton boton-logout" href="#">Cerrar sesion</a>
+  </div>
+</aside>
+
+<main class="contenido">
+  <section class="cabecera-pagina">
+    <div>
+      <p class="etiqueta-kicker">Panel de escucha</p>
+      <h1 class="titulo-pagina">Bienvenido/a, <span class="nombre-resaltado">userAdmin</span></h1>
+      <p class="subtitulo-pagina">Tu sesion esta activa con el rol
+        <span class="badge badge-admin">ADMIN</span>
+        &middot; tienes habilitados los controles de administracion (CRUD).</p>
+    </div>
+    <div class="cabecera-usuario">
+      <img class="avatar avatar-grande" src="C:/Users/salma/Documents/Octavo_Semestre/Web_Avanzadas/AppWebAvSalmaMorales/webapppolimusicv1_asp/UserImages/root.png" alt="">
+      <div class="cabecera-usuario-datos">
+        <strong>userAdmin</strong><span>usrfakeadmin@epn.edu.ec</span>
+      </div>
+      <a class="boton boton-secundario" href="#">Cerrar sesion</a>
+    </div>
+  </section>
+
+  <section class="panel">
+    <div class="panel-encabezado">
+      <div>
+        <h2 class="panel-titulo">Song List</h2>
+        <p class="panel-texto">A continuacion se presenta el listado de canciones
+          (<strong>Song List</strong>) almacenado en la tabla <code>TBL_SONG</code> de la base de
+          datos <code>BDD_PoliMusic</code>. Puedes reproducir cada tema con el boton
+          <strong>Reproducir</strong>; el reproductor fijo de la parte inferior permite avanzar,
+          pausar y ajustar el volumen.</p>
+      </div>
+      <div class="panel-contador">
+        <span class="contador-numero">5</span>
+        <span class="contador-texto">canciones<br>registradas</span>
+      </div>
+    </div>
+    <div class="tabla-envoltura">
+      <table class="tabla-canciones">
+        <thead><tr>
+          <th class="col-num">#</th><th class="col-titulo">Cancion</th>
+          <th class="col-artista">Artista(s)</th><th class="col-archivo">Archivo</th>
+          <th class="col-plays">Plays</th><th class="col-accion">Acciones</th>
+        </tr></thead>
+        <tbody>
+        <tr class="fila-cancion" data-id="1" data-src="C:/Users/salma/Documents/Octavo_Semestre/Web_Avanzadas/AppWebAvSalmaMorales/webapppolimusicv1_asp/songFiles/bensound-adventure.mp3" data-titulo="Adventure"
+            data-artista="Juan Gabriel" data-cover="C:/Users/salma/Documents/Octavo_Semestre/Web_Avanzadas/AppWebAvSalmaMorales/webapppolimusicv1_asp/img/cover-1.svg">
+          <td class="col-num"><span class="indice-fila">1</span><button class="btn-reproducir" type="button"><svg class="ico-play-fila" viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M8 5v14l11-7z"></path></svg><svg class="ico-pausa-fila" viewBox="0 0 24 24" width="16" height="16" fill="currentColor" style="display:none"><path d="M7 5h4v14H7zM13 5h4v14h-4z"></path></svg></button></td>
+          <td class="col-titulo">
+            <div class="celda-cancion"><img class="miniatura" src="C:/Users/salma/Documents/Octavo_Semestre/Web_Avanzadas/AppWebAvSalmaMorales/webapppolimusicv1_asp/img/cover-1.svg" alt="">
+              <div><strong class="nombre-cancion">Adventure</strong></div></div>
+          </td>
+          <td class="col-artista"><span class="artista-tag">Juan Gabriel</span></td>
+          <td class="col-archivo"><code class="ruta-archivo">bensound-adventure.mp3</code></td>
+          <td class="col-plays"><span class="contador-plays">0</span></td>
+          <td class="col-accion"><div class="acciones-fila"><button class="btn-accion btn-accion-play js-reproducir" type="button"><svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor"><path d="M8 5v14l11-7z"></path></svg><span>Reproducir</span></button><button class="btn-accion btn-accion-editar js-editar" type="button"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"></path><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 11-4z"></path></svg><span>Editar</span></button><button class="btn-accion btn-accion-eliminar js-eliminar" type="button"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"></path><path d="M8 6V4h8v2"></path><path d="M19 6l-1 14H6L5 6"></path></svg><span>Eliminar</span></button></div></td>
+        </tr>
+        <tr class="fila-cancion" data-id="2" data-src="" data-titulo="Dreams"
+            data-artista="Juan Gabriel" data-cover="C:/Users/salma/Documents/Octavo_Semestre/Web_Avanzadas/AppWebAvSalmaMorales/webapppolimusicv1_asp/img/cover-4.svg">
+          <td class="col-num"><span class="indice-fila">2</span><button class="btn-reproducir" type="button" disabled title="Archivo no encontrado"><svg class="ico-play-fila" viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M8 5v14l11-7z"></path></svg><svg class="ico-pausa-fila" viewBox="0 0 24 24" width="16" height="16" fill="currentColor" style="display:none"><path d="M7 5h4v14H7zM13 5h4v14h-4z"></path></svg></button></td>
+          <td class="col-titulo">
+            <div class="celda-cancion"><img class="miniatura" src="C:/Users/salma/Documents/Octavo_Semestre/Web_Avanzadas/AppWebAvSalmaMorales/webapppolimusicv1_asp/img/cover-4.svg" alt="">
+              <div><strong class="nombre-cancion">Dreams</strong><span class="estado-error">Audio no disponible</span></div></div>
+          </td>
+          <td class="col-artista"><span class="artista-tag">Juan Gabriel</span></td>
+          <td class="col-archivo"><code class="ruta-archivo">bensound-dreams.mp3</code></td>
+          <td class="col-plays"><span class="contador-plays">1</span></td>
+          <td class="col-accion"><div class="acciones-fila"><button class="btn-accion btn-accion-deshabilitado" type="button" disabled><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"></path></svg><span>Sin audio</span></button><button class="btn-accion btn-accion-editar js-editar" type="button"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"></path><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 11-4z"></path></svg><span>Editar</span></button><button class="btn-accion btn-accion-eliminar js-eliminar" type="button"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"></path><path d="M8 6V4h8v2"></path><path d="M19 6l-1 14H6L5 6"></path></svg><span>Eliminar</span></button></div></td>
+        </tr>
+        <tr class="fila-cancion" data-id="3" data-src="" data-titulo="Energy"
+            data-artista="Juan Gabriel" data-cover="C:/Users/salma/Documents/Octavo_Semestre/Web_Avanzadas/AppWebAvSalmaMorales/webapppolimusicv1_asp/img/cover-5.svg">
+          <td class="col-num"><span class="indice-fila">3</span><button class="btn-reproducir" type="button" disabled title="Archivo no encontrado"><svg class="ico-play-fila" viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M8 5v14l11-7z"></path></svg><svg class="ico-pausa-fila" viewBox="0 0 24 24" width="16" height="16" fill="currentColor" style="display:none"><path d="M7 5h4v14H7zM13 5h4v14h-4z"></path></svg></button></td>
+          <td class="col-titulo">
+            <div class="celda-cancion"><img class="miniatura" src="C:/Users/salma/Documents/Octavo_Semestre/Web_Avanzadas/AppWebAvSalmaMorales/webapppolimusicv1_asp/img/cover-5.svg" alt="">
+              <div><strong class="nombre-cancion">Energy</strong><span class="estado-error">Audio no disponible</span></div></div>
+          </td>
+          <td class="col-artista"><span class="artista-tag">Juan Gabriel</span></td>
+          <td class="col-archivo"><code class="ruta-archivo">bensound-energy.mp3</code></td>
+          <td class="col-plays"><span class="contador-plays">2</span></td>
+          <td class="col-accion"><div class="acciones-fila"><button class="btn-accion btn-accion-deshabilitado" type="button" disabled><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"></path></svg><span>Sin audio</span></button><button class="btn-accion btn-accion-editar js-editar" type="button"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"></path><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 11-4z"></path></svg><span>Editar</span></button><button class="btn-accion btn-accion-eliminar js-eliminar" type="button"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"></path><path d="M8 6V4h8v2"></path><path d="M19 6l-1 14H6L5 6"></path></svg><span>Eliminar</span></button></div></td>
+        </tr>
+        <tr class="fila-cancion" data-id="4" data-src="" data-titulo="Scifi"
+            data-artista="Juan Gabriel" data-cover="C:/Users/salma/Documents/Octavo_Semestre/Web_Avanzadas/AppWebAvSalmaMorales/webapppolimusicv1_asp/img/cover-4.svg">
+          <td class="col-num"><span class="indice-fila">4</span><button class="btn-reproducir" type="button" disabled title="Archivo no encontrado"><svg class="ico-play-fila" viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M8 5v14l11-7z"></path></svg><svg class="ico-pausa-fila" viewBox="0 0 24 24" width="16" height="16" fill="currentColor" style="display:none"><path d="M7 5h4v14H7zM13 5h4v14h-4z"></path></svg></button></td>
+          <td class="col-titulo">
+            <div class="celda-cancion"><img class="miniatura" src="C:/Users/salma/Documents/Octavo_Semestre/Web_Avanzadas/AppWebAvSalmaMorales/webapppolimusicv1_asp/img/cover-4.svg" alt="">
+              <div><strong class="nombre-cancion">Scifi</strong><span class="estado-error">Audio no disponible</span></div></div>
+          </td>
+          <td class="col-artista"><span class="artista-tag">Juan Gabriel</span></td>
+          <td class="col-archivo"><code class="ruta-archivo">bensound-scifi.mp3</code></td>
+          <td class="col-plays"><span class="contador-plays">3</span></td>
+          <td class="col-accion"><div class="acciones-fila"><button class="btn-accion btn-accion-deshabilitado" type="button" disabled><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"></path></svg><span>Sin audio</span></button><button class="btn-accion btn-accion-editar js-editar" type="button"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"></path><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 11-4z"></path></svg><span>Editar</span></button><button class="btn-accion btn-accion-eliminar js-eliminar" type="button"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"></path><path d="M8 6V4h8v2"></path><path d="M19 6l-1 14H6L5 6"></path></svg><span>Eliminar</span></button></div></td>
+        </tr>
+        <tr class="fila-cancion" data-id="5" data-src="" data-titulo="Tomorrow"
+            data-artista="Juan Gabriel" data-cover="C:/Users/salma/Documents/Octavo_Semestre/Web_Avanzadas/AppWebAvSalmaMorales/webapppolimusicv1_asp/img/cover-5.svg">
+          <td class="col-num"><span class="indice-fila">5</span><button class="btn-reproducir" type="button" disabled title="Archivo no encontrado"><svg class="ico-play-fila" viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M8 5v14l11-7z"></path></svg><svg class="ico-pausa-fila" viewBox="0 0 24 24" width="16" height="16" fill="currentColor" style="display:none"><path d="M7 5h4v14H7zM13 5h4v14h-4z"></path></svg></button></td>
+          <td class="col-titulo">
+            <div class="celda-cancion"><img class="miniatura" src="C:/Users/salma/Documents/Octavo_Semestre/Web_Avanzadas/AppWebAvSalmaMorales/webapppolimusicv1_asp/img/cover-5.svg" alt="">
+              <div><strong class="nombre-cancion">Tomorrow</strong><span class="estado-error">Audio no disponible</span></div></div>
+          </td>
+          <td class="col-artista"><span class="artista-tag">Juan Gabriel</span></td>
+          <td class="col-archivo"><code class="ruta-archivo">bensound-tomorrow.mp3</code></td>
+          <td class="col-plays"><span class="contador-plays">4</span></td>
+          <td class="col-accion"><div class="acciones-fila"><button class="btn-accion btn-accion-deshabilitado" type="button" disabled><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"></path></svg><span>Sin audio</span></button><button class="btn-accion btn-accion-editar js-editar" type="button"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"></path><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 11-4z"></path></svg><span>Editar</span></button><button class="btn-accion btn-accion-eliminar js-eliminar" type="button"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"></path><path d="M8 6V4h8v2"></path><path d="M19 6l-1 14H6L5 6"></path></svg><span>Eliminar</span></button></div></td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="panel">
+    <div class="panel-encabezado">
+      <div>
+        <h2 class="panel-titulo">Administracion de canciones</h2>
+        <p class="panel-texto">Solo el rol <strong>ADMIN</strong> puede crear, actualizar y
+          eliminar registros de <code>TBL_SONG</code>.</p>
+      </div>
+      <button class="boton boton-primario" type="button">Nueva cancion</button>
+    </div>
+    <form class="form-cancion" onsubmit="return false;">
+      <div class="form-grilla">
+        <label class="campo"><span class="campo-etiqueta">Nombre de la cancion</span>
+          <input class="campo-input" value="Adventure" maxlength="50"></label>
+        <label class="campo"><span class="campo-etiqueta">Archivo de audio (.mp3)</span>
+          <select class="campo-input">
+            <option>bensound-adventure.mp3</option>
+          </select>
+          <span class="campo-ayuda">El archivo se guarda en <code>songFiles/</code>.</span></label>
+      </div>
+      <div class="form-acciones">
+        <span class="form-modo">Modo: crear nueva cancion</span>
+        <div class="form-botones">
+          <button type="button" class="boton boton-texto">Limpiar formulario</button>
+          <button type="submit" class="boton boton-primario">Guardar cancion</button>
+        </div>
+      </div>
+    </form>
+  </section>
+
+  <section class="rejilla-tarjetas">
+    <article class="tarjeta">
+      <h3 class="tarjeta-titulo">Albums mas populares</h3>
+      <p class="tarjeta-subtitulo">TBL_ALBUM + TBL_TRACKLIST</p>
+<div class="item-lista"><img class="item-imagen" src="C:/Users/salma/Documents/Octavo_Semestre/Web_Avanzadas/AppWebAvSalmaMorales/webapppolimusicv1_asp/PlaylistImages/playlist1.png" alt=""><div class="item-datos"><strong>Rock Album</strong><span>1976 &amp;middot; 5 canciones</span></div></div>
+<div class="item-lista"><img class="item-imagen" src="C:/Users/salma/Documents/Octavo_Semestre/Web_Avanzadas/AppWebAvSalmaMorales/webapppolimusicv1_asp/PlaylistImages/playlist2.png" alt=""><div class="item-datos"><strong>Retro Album Music</strong><span>1980 &amp;middot; 3 canciones</span></div></div>
+<div class="item-lista"><img class="item-imagen" src="C:/Users/salma/Documents/Octavo_Semestre/Web_Avanzadas/AppWebAvSalmaMorales/webapppolimusicv1_asp/PlaylistImages/playlist3.png" alt=""><div class="item-datos"><strong>Classic Album</strong><span>1950 &amp;middot; 2 canciones</span></div></div>
+<div class="item-lista"><img class="item-imagen" src="C:/Users/salma/Documents/Octavo_Semestre/Web_Avanzadas/AppWebAvSalmaMorales/webapppolimusicv1_asp/PlaylistImages/playlist4.png" alt=""><div class="item-datos"><strong>Country Album</strong><span>1990 &amp;middot; 2 canciones</span></div></div>
+<div class="item-lista"><img class="item-imagen" src="C:/Users/salma/Documents/Octavo_Semestre/Web_Avanzadas/AppWebAvSalmaMorales/webapppolimusicv1_asp/PlaylistImages/playlist5.png" alt=""><div class="item-datos"><strong>Relax Music</strong><span>2000 &amp;middot; 2 canciones</span></div></div>
+    </article>
+    <article class="tarjeta">
+      <h3 class="tarjeta-titulo">Playlists recientes</h3>
+      <p class="tarjeta-subtitulo">TBL_PLAYLIST + TBL_PLAYLIST_SONG</p>
+<div class="item-lista"><img class="item-imagen" src="C:/Users/salma/Documents/Octavo_Semestre/Web_Avanzadas/AppWebAvSalmaMorales/webapppolimusicv1_asp/PlaylistImages/playlist1.png" alt=""><div class="item-datos"><strong>Playlist 5</strong><span>Publica &amp;middot; 1 canciones</span></div></div>
+<div class="item-lista"><img class="item-imagen" src="C:/Users/salma/Documents/Octavo_Semestre/Web_Avanzadas/AppWebAvSalmaMorales/webapppolimusicv1_asp/PlaylistImages/playlist2.png" alt=""><div class="item-datos"><strong>Playlist 4</strong><span>Privada &amp;middot; 2 canciones</span></div></div>
+<div class="item-lista"><img class="item-imagen" src="C:/Users/salma/Documents/Octavo_Semestre/Web_Avanzadas/AppWebAvSalmaMorales/webapppolimusicv1_asp/PlaylistImages/playlist3.png" alt=""><div class="item-datos"><strong>Playlist 3</strong><span>Publica &amp;middot; 1 canciones</span></div></div>
+<div class="item-lista"><img class="item-imagen" src="C:/Users/salma/Documents/Octavo_Semestre/Web_Avanzadas/AppWebAvSalmaMorales/webapppolimusicv1_asp/PlaylistImages/playlist4.png" alt=""><div class="item-datos"><strong>Playlist 2</strong><span>Publica &amp;middot; 4 canciones</span></div></div>
+<div class="item-lista"><img class="item-imagen" src="C:/Users/salma/Documents/Octavo_Semestre/Web_Avanzadas/AppWebAvSalmaMorales/webapppolimusicv1_asp/PlaylistImages/playlist5.png" alt=""><div class="item-datos"><strong>Playlist 1</strong><span>Privada &amp;middot; 5 canciones</span></div></div>
+    </article>
+  </section>
+</main>
+</div>
+
+<div class="reproductor" id="reproductor">
+  <div class="reproductor-info">
+    <div class="reproductor-miniatura" id="repMiniatura">
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor"
+        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M9 18V5l12-2v13"></path><circle cx="6" cy="18" r="3"></circle>
+        <circle cx="18" cy="16" r="3"></circle></svg>
+    </div>
+    <div class="reproductor-textos">
+      <strong id="repTitulo">Selecciona una cancion</strong>
+      <span id="repArtista">Usa el boton reproducir de la tabla</span>
+    </div>
+  </div>
+  <div class="reproductor-controles">
+    <button class="btn-icono" id="btnAnterior">
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+        <path d="M6 5h2v14H6zM20 5v14l-11-7z"></path></svg></button>
+    <button class="btn-icono btn-play" id="btnReproducir">
+      <svg id="icoPlay" viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+        <path d="M8 5v14l11-7z"></path></svg>
+      <svg id="icoPausa" viewBox="0 0 24 24" width="20" height="20" fill="currentColor"
+        style="display:none"><path d="M7 5h4v14H7zM13 5h4v14h-4z"></path></svg></button>
+    <button class="btn-icono" id="btnSiguiente">
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+        <path d="M16 5h2v14h-2zM4 5v14l11-7z"></path></svg></button>
+  </div>
+  <div class="reproductor-barra">
+    <span class="tiempo" id="repTiempoActual">0:00</span>
+    <input type="range" id="repProgreso" class="rango rango-progreso" min="0" max="100" value="0" step="0.1">
+    <span class="tiempo" id="repTiempoTotal">0:00</span>
+  </div>
+  <div class="reproductor-volumen">
+    <input type="range" id="repVolumen" class="rango rango-volumen" min="0" max="100" value="80">
+  </div>
+  <audio id="elementoAudio" preload="none"></audio>
+</div>
+<div class="aviso-audio" id="avisoAudio"></div>
+
+<script>
+/* ============================================================================
+   PoliMusic  -  JavaScript de la pagina de canciones
+  ----------------------------------------------------------------------------
+   1. Reproductor de audio (play/pausa, anterior/siguiente, progreso, volumen)
+   2. CRUD del lado del cliente para el formulario de administracion
+   3. Modal de confirmacion para eliminar canciones
+   ========================================================================= */
+(function () {
+  "use strict";
+
+  /* ------------------------------------------------------------ PLAYER --- */
+  var audio       = document.getElementById("elementoAudio");
+  var btnPlay     = document.getElementById("btnReproducir");
+  var btnPrev     = document.getElementById("btnAnterior");
+  var btnNext     = document.getElementById("btnSiguiente");
+  var icoPlay     = document.getElementById("icoPlay");
+  var icoPausa    = document.getElementById("icoPausa");
+  var barra       = document.getElementById("repProgreso");
+  var volumen     = document.getElementById("repVolumen");
+  var tActual     = document.getElementById("repTiempoActual");
+  var tTotal      = document.getElementById("repTiempoTotal");
+  var repTitulo   = document.getElementById("repTitulo");
+  var repArtista  = document.getElementById("repArtista");
+  var repMiniatura= document.getElementById("repMiniatura");
+  var aviso       = document.getElementById("avisoAudio");
+
+  var filas = Array.prototype.slice.call(document.querySelectorAll(".fila-cancion"));
+  var lista = filas.filter(function (f) {
+    return f.getAttribute("data-src") && f.getAttribute("data-src") !== "";
+  });
+
+  var indiceActual = -1;
+
+  function formatoTiempo(seg) {
+    if (!isFinite(seg) || seg < 0) return "0:00";
+    var m = Math.floor(seg / 60);
+    var s = Math.floor(seg % 60);
+    return m + ":" + (s < 10 ? "0" + s : s);
+  }
+
+  function pintarBarra(porcentaje) {
+    var pct = Math.max(0, Math.min(100, porcentaje || 0));
+    barra.style.background =
+      "linear-gradient(90deg,#fbbf24 0%,#f472b6 " + pct + "%,rgba(255,255,255,.14) " + pct + "%)";
+  }
+
+  function marcarFilaActiva() {
+    filas.forEach(function (f) {
+      var enCurso = lista.indexOf(f) === indiceActual;
+      f.classList.toggle("en-reproduccion", enCurso);
+
+      var boton = f.querySelector(".btn-reproducir");
+      if (boton) {
+        var iPlay = boton.querySelector(".ico-play-fila");
+        var iPausa = boton.querySelector(".ico-pausa-fila");
+        if (iPlay) iPlay.style.display = enCurso && !audio.paused ? "none" : "";
+        if (iPausa) iPausa.style.display = enCurso && !audio.paused ? "" : "none";
+      }
+    });
+  }
+
+  function actualizarIcono() {
+    var reproduciendo = !audio.paused;
+    if (icoPlay) icoPlay.style.display = reproduciendo ? "none" : "";
+    if (icoPausa) icoPausa.style.display = reproduciendo ? "" : "none";
+    marcarFilaActiva();
+  }
+
+  function mostrarAviso(texto) {
+    if (!aviso) return;
+    aviso.textContent = texto;
+    aviso.classList.add("visible");
+    clearTimeout(mostrarAviso.timer);
+    mostrarAviso.timer = setTimeout(function () {
+      aviso.classList.remove("visible");
+    }, 3200);
+  }
+
+  function cargar(indice, debeSonar) {
+    if (indice < 0 || indice >= lista.length) return;
+
+    indiceActual = indice;
+    var fila = lista[indice];
+
+    var src     = fila.getAttribute("data-src");
+    var titulo  = fila.getAttribute("data-titulo");
+    var artista = fila.getAttribute("data-artista");
+    var cover   = fila.getAttribute("data-cover");
+    var idCancion = fila.getAttribute("data-id");
+
+    audio.src = src;
+
+    if (repTitulo) repTitulo.textContent = titulo || "Sin titulo";
+    if (repArtista) repArtista.textContent = artista || "Artista desconocido";
+
+    if (repMiniatura) {
+      if (cover) {
+        repMiniatura.innerHTML = '<img src="' + cover + '" alt="">';
+      }
+    }
+
+    tActual.textContent = "0:00";
+    tTotal.textContent = "0:00";
+    pintarBarra(0);
+
+    if (debeSonar) {
+      var promesa = audio.play();
+      if (promesa && typeof promesa.catch === "function") {
+        promesa.catch(function () {
+          mostrarAviso("No fue posible reproducir el archivo. Verifica que el mp3 exista en songFiles.");
+        });
+      }
+      // Suma una reproduccion en TBL_SONG
+      if (idCancion) {
+        var img = new Image();
+        img.src = "canciones_accion.asp?accion=play&idSong=" + encodeURIComponent(idCancion);
+      }
+    }
+
+    actualizarIcono();
+  }
+
+  if (lista.length > 0 && audio) {
+    if (btnPlay) {
+      btnPlay.addEventListener("click", function () {
+        if (indiceActual === -1) {
+          cargar(0, true);
+          return;
+        }
+        if (audio.paused) {
+          var p = audio.play();
+          if (p && typeof p.catch === "function") {
+            p.catch(function () { mostrarAviso("El navegador bloqueara la reproduccion automatica."); });
+          }
+        } else {
+          audio.pause();
+        }
+      });
+    }
+
+    if (btnPrev) {
+      btnPrev.addEventListener("click", function () {
+        if (indiceActual <= 0) return;
+        cargar(indiceActual - 1, true);
+      });
+    }
+
+    if (btnNext) {
+      btnNext.addEventListener("click", function () {
+        if (indiceActual >= lista.length - 1) return;
+        cargar(indiceActual + 1, true);
+      });
+    }
+
+    audio.addEventListener("timeupdate", function () {
+      if (audio.duration) {
+        tTotal.textContent = formatoTiempo(audio.duration);
+        pintarBarra((audio.currentTime / audio.duration) * 100);
+      }
+      tActual.textContent = formatoTiempo(audio.currentTime);
+    });
+
+    audio.addEventListener("ended", function () {
+      if (indiceActual < lista.length - 1) {
+        cargar(indiceActual + 1, true);
+      } else {
+        actualizarIcono();
+      }
+    });
+
+    audio.addEventListener("pause", actualizarIcono);
+    audio.addEventListener("play", actualizarIcono);
+    audio.addEventListener("error", function () {
+      mostrarAviso("Error al cargar el archivo de audio.");
+      actualizarIcono();
+    });
+
+    barra.addEventListener("input", function () {
+      if (audio.duration) {
+        audio.currentTime = (barra.value / 100) * audio.duration;
+      }
+    });
+
+    volumen.addEventListener("input", function () {
+      audio.volume = volumen.value / 100;
+    });
+
+    audio.volume = volumen.value / 100;
+
+    // Botones de la tabla
+    filas.forEach(function (fila) {
+      var boton = fila.querySelector(".btn-reproducir");
+      if (boton && !boton.disabled) {
+        boton.addEventListener("click", function () {
+          var pos = lista.indexOf(fila);
+          if (pos === indiceActual && !audio.paused) {
+            audio.pause();
+          } else {
+            cargar(pos, true);
+          }
+        });
+      }
+
+      var btnFila = fila.querySelector(".js-reproducir");
+      if (btnFila) {
+        btnFila.addEventListener("click", function () {
+          cargar(lista.indexOf(fila), true);
+        });
+      }
+    });
+  }
+
+  /* -------------------------------------------------------------- CRUD --- */
+  var form      = document.getElementById("formCancion");
+  var btnNueva  = document.getElementById("btnNueva");
+  var btnCancel = document.getElementById("btnCancelar");
+  var campoId   = document.getElementById("idSong");
+  var campoNom  = document.getElementById("songName");
+  var campoRuta = document.getElementById("songPath");
+  var campoAcc  = form ? form.querySelector('input[name="accion"]') : null;
+  var textoModo = document.getElementById("formModo");
+  var btnGuardar= document.getElementById("btnGuardar");
+
+  if (form) {
+    function modoCrear() {
+      if (campoAcc) campoAcc.value = "crear";
+      if (campoId) campoId.value = "0";
+      if (textoModo) textoModo.textContent = "Modo: crear nueva cancion";
+      if (btnGuardar) btnGuardar.textContent = "Guardar cancion";
+    }
+
+    function modoEditar(id, nombre, ruta) {
+      if (campoAcc) campoAcc.value = "editar";
+      if (campoId) campoId.value = id;
+      if (campoNom) campoNom.value = nombre;
+      if (campoRuta) campoRuta.value = ruta;
+      if (textoModo) textoModo.textContent = 'Modo: editando "' + nombre + '" (ID ' + id + ')';
+      if (btnGuardar) btnGuardar.textContent = "Guardar cambios";
+
+      form.scrollIntoView({ behavior: "smooth", block: "center" });
+      if (campoNom) campoNom.focus();
+    }
+
+    if (btnNueva) {
+      btnNueva.addEventListener("click", function () {
+        form.reset();
+        modoCrear();
+        form.scrollIntoView({ behavior: "smooth", block: "center" });
+        if (campoNom) campoNom.focus();
+      });
+    }
+
+    if (btnCancel) {
+      btnCancel.addEventListener("click", function () {
+        form.reset();
+        modoCrear();
+      });
+    }
+
+    var botonesEditar = document.querySelectorAll(".js-editar");
+    Array.prototype.forEach.call(botonesEditar, function (boton) {
+      boton.addEventListener("click", function () {
+        modoEditar(
+          boton.getAttribute("data-id"),
+          boton.getAttribute("data-nombre"),
+          boton.getAttribute("data-ruta")
+        );
+      });
+    });
+
+    // Al enviar, se deshabilita el boton para evitar doble inserccion
+    form.addEventListener("submit", function () {
+      if (btnGuardar) {
+        btnGuardar.disabled = true;
+        btnGuardar.textContent = "Guardando...";
+      }
+    });
+  }
+
+  /* ------------------------------------------------------------- MODAL --- */
+  var modal      = document.getElementById("modalEliminar");
+  var nombreElim = document.getElementById("nombreEliminar");
+  var linkConf   = document.getElementById("btnConfirmarEliminar");
+  var btnCancelE = document.getElementById("btnCancelarEliminar");
+
+  if (modal && linkConf) {
+    var botonesEliminar = document.querySelectorAll(".js-eliminar");
+
+    Array.prototype.forEach.call(botonesEliminar, function (boton) {
+      boton.addEventListener("click", function () {
+        var id = boton.getAttribute("data-id");
+        var nom = boton.getAttribute("data-nombre");
+        if (nombreElim) nombreElim.textContent = nom;
+        linkConf.href = "canciones_accion.asp?accion=eliminar&idSong=" + encodeURIComponent(id);
+        modal.classList.add("abierto");
+        modal.setAttribute("aria-hidden", "false");
+      });
+    });
+
+    function cerrarModal() {
+      modal.classList.remove("abierto");
+      modal.setAttribute("aria-hidden", "true");
+    }
+
+    if (btnCancelE) btnCancelE.addEventListener("click", cerrarModal);
+
+    modal.addEventListener("click", function (ev) {
+      if (ev.target === modal) cerrarModal();
+    });
+
+    document.addEventListener("keydown", function (ev) {
+      if (ev.key === "Escape") cerrarModal();
+    });
+  }
+
+  /* ---------------------------------------------------- ATAJOS TECLADO --- */
+  document.addEventListener("keydown", function (ev) {
+    var etiqueta = (ev.target.tagName || "").toLowerCase();
+    if (etiqueta === "input" || etiqueta === "select" || etiqueta === "textarea") return;
+
+    if (ev.code === "Space") {
+      ev.preventDefault();
+      if (btnPlay) btnPlay.click();
+    } else if (ev.key === "ArrowRight" && ev.shiftKey) {
+      if (btnNext) btnNext.click();
+    } else if (ev.key === "ArrowLeft" && ev.shiftKey) {
+      if (btnPrev) btnPrev.click();
+    }
+  });
+})();
+</script>
+</body>
+</html>
